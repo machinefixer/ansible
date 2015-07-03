@@ -1,0 +1,14 @@
+---
+- name: update apt cache
+  apt: update_cache=yes
+  tags:
+    - update
+
+- name: install collectd
+  apt: name=collectd state=present
+
+- name: configure collectd 
+  copy: src=template/collectd.conf dest=/etc/collectd/collectd.conf owner=root group=root mode=0644
+
+- name: restart collectd
+  service: name=collectd state=restarted

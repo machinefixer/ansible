@@ -1,0 +1,18 @@
+---
+- name: make sure you have curl
+  apt: name=curl state=present
+
+- name: execute official PPA setting script
+  shell: "sudo curl -sL https://deb.nodesource.com/setup | sudo bash - executable=/bin/bash"
+
+- name: install nodejs
+  apt: name=nodejs state=present
+
+- name: install build-essential
+  apt: name=build-essential state=present
+
+- name: installation verification
+  shell: node -v
+  register: nodejs_version
+
+- debug: var=nodejs_version

@@ -1,0 +1,9 @@
+---
+- name: add rabbitmq package source
+  lineinfile: "dest=/etc/apt/sources.list line='deb http://www.rabbitmq.com/debian/ testing main' state=present"
+
+- name: add key file
+  apt_key: "url=https://www.rabbitmq.com/rabbitmq-signing-key-public.asc state=present"
+
+- name: install rabbitmq
+  apt: name=rabbitmq-server update_cache=yes

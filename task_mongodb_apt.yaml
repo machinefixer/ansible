@@ -1,0 +1,14 @@
+---
+- name: add mongo apt key
+  shell: "sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10 executable=/bin/bash"
+
+- name: create mongo source list file
+  file: path=/etc/apt/sources.list.d/mongodb.list state=touch owner=root group=root
+
+- name: add line to list file
+  lineinfile: "dest=/etc/apt/sources.list.d/mongodb.list line='deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' state=present"
+- name: update cache
+  shell: apt-get update
+
+- name: install mongodb
+  apt: name=mongodb-10gen state=present

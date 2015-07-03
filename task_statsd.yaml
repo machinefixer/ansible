@@ -1,0 +1,41 @@
+---
+- name: clone stats github repo
+  git: repo=https://github.com/etsy/statsd.git dest=/opt/statsd/
+
+- name: install statsd-influxdb-backend
+  npm: name=statsd-influxdb-backend state=present path=/opt/statsd
+
+- name: copy config file as config.js
+  copy: src=template/statsd_config.js dest=/opt/statsd/config.js
+
+- name: copy supervisor config file as config.js
+  copy: src=template/supervisor/statsd.conf dest=/opt/statsd/statsd.conf
+
+- name: change folder mode recursively
+  file: path=/opt/statsd state=directory owner=imgadmin group=imgadmin mode=0755 recurse=yes
+
+- name: soft link statsd's supervisor config file
+  file: src=/opt/statsd/statsd.conf dest=/etc/supervisor/conf.d/statsd.conf state=link
+  sudo: yes
+  tags: supervisor
+
+- name: supervisorctl reread
+  shell: supervisorctl reread
+  sudo: yes
+  tags: supervisor
+  
+
+- name: supervisorctl update
+  shell: supervisorctl update
+  sudo: yes
+  tags: supervisor
+
+- name: display statsd status
+  shell: supervisorctl status
+  sudo: yes
+  register: status
+  tags: supervisor
+
+- debug: var=status
+  tags: supervisor
+  
